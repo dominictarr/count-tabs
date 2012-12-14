@@ -2,11 +2,12 @@
 
 Count the tabs that a user has open.
 
-## License
-
+``` js
 var tabs = require('..')(function (up) {
   document.getElementById('tabs_counter').innerText = up
 })
+```
 
+## License
 
 MIT
