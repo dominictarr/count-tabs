@@ -5,7 +5,7 @@ var id
 var KEY = 'tabsQuery'
 var tabs = {}
 var pattern = /^tabs:(.+)$/
-var emitter
+var emitter, oldUp
 module.exports = function (listener) {
 
   function attach() {
@@ -19,6 +19,9 @@ module.exports = function (listener) {
     attach()
     return emitter
   }
+
+  emitter = new EventEmitter()
+
   var start = Date.now()
   for( var key in localStorage) {
     var m
@@ -43,14 +46,16 @@ module.exports = function (listener) {
     for(var _id in tabs) {
       if(Number(tabs[_id]) < now - 2000) {
         delete tabs[_id]
-        delete localStorage['tabs:'+_id]
+        //don't delete old ids, so they can be reused,
+        //making for smaller vector-clocks.
+        //delete localStorage['tabs:'+_id]
         emitter.emit('close', _id)
         change = true
       }
     }
     var up = Object.keys(tabs).sort()
     if(!oldUp || up.join('|') != oldUp.join('|')) {
-      var l = oldUp.length
+      var l = oldUp ? oldUp.length : 0
       emitter.up = up.length
       oldUp = up
       emitter.emit('change', tabs, l)
@@ -74,6 +79,8 @@ module.exports = function (listener) {
     tabs[id] = localStorage['tabs:'+id] = Date.now()
     count()
   }, 1000)
+
+  attach()
 
   return emitter
 }
