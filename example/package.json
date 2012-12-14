@@ -1,0 +1,14 @@
+{
+  "name": "tabs--example",
+  "version": "0.0.0",
+  "dependencies": {
+    "ecstatic": "~0.1.6"
+  },
+  "devDependencies": {
+    "browserify": "*"
+  },
+  "scripts": {
+    "build": "browserify client.js -o static/bundle.js --debug"
+  },
+  "author": "'Dominic Tarr' <dominic.tarr@gmail.com> (http://dominictarr.com)"
+}
