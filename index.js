@@ -1,8 +1,10 @@
+var EventEmitter = require('events').EventEmitter
+var hash = require('sha1sum')
+
 var id
 var KEY = 'tabsQuery'
 var tabs = {}
 var pattern = /^tabs:(.+)$/
-var EventEmitter = require('events').EventEmitter
 
 module.exports = function (listener) {
 
@@ -13,17 +15,15 @@ module.exports = function (listener) {
     if(m = pattern.exec(key)) {
       var _id = m[1]
       if(!id && Number(localStorage[key]) < start - 2000) {
-        id = _id
+        emitter.id = id = _id
         localStorage['tabs:'+id] = start //claim this key
       }
       tabs[_id] = Number(localStorage[key])
     }
   }
 
-  console.log('initial tabs', tabs)
-
   if(!id) {
-    id = '#'+Math.random()
+    emitter.id = id = hash(Date.now())
     tabs[id] = localStorage['tabs:'+id] = start//claim this key
   }
 
@@ -39,7 +39,6 @@ module.exports = function (listener) {
       }
     }
     var up = Object.keys(tabs).sort()
-    console.log('count', JSON.stringify(tabs))
     if(!oldUp || up.join('|') != oldUp.join('|')) {
       var l = oldUp.length
       emitter.up = up.length
