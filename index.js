@@ -5,11 +5,21 @@ var id
 var KEY = 'tabsQuery'
 var tabs = {}
 var pattern = /^tabs:(.+)$/
-
+var emitter
 module.exports = function (listener) {
 
+  function attach() {
+    if(listener) {
+      emitter.on('change', listener)
+      listener.call(emitter, emitter.up, 0)
+    }
+  }
+
+  if(emitter) {
+    attach()
+    return emitter
+  }
   var start = Date.now()
-  var emitter = new EventEmitter(), oldUp = 0
   for( var key in localStorage) {
     var m
     if(m = pattern.exec(key)) {
@@ -65,10 +75,6 @@ module.exports = function (listener) {
     count()
   }, 1000)
 
-  if(listener) {
-    emitter.on('change', listener)
-    listener.call(emitter, emitter.up, 0)
-  }
   return emitter
 }
 
