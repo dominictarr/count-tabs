@@ -22,6 +22,8 @@ module.exports = function (listener) {
 
   emitter = new EventEmitter()
 
+  emitter.tabs = tabs
+
   var start = Date.now()
   for( var key in localStorage) {
     var m
