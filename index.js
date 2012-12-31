@@ -6,7 +6,17 @@ var KEY = 'tabsQuery'
 var tabs = {}
 var pattern = /^tabs:(.+)$/
 var emitter, oldUp
-module.exports = function (listener) {
+
+//NOTE. this module uses a global singleton,
+//so the first thing to require it must set the interval
+//else, you will be stuck with the default.
+
+//disabling the interval option for now.
+//is unstable under 500 ms.
+module.exports = function (/*interval, */listener) {
+  //if('function' === typeof interval)
+  //  listener = interval, interval = 1000
+  var interval = 500
 
   function attach() {
     if(listener) {
@@ -29,7 +39,7 @@ module.exports = function (listener) {
     var m
     if(m = pattern.exec(key)) {
       var _id = m[1]
-      if(!id && Number(localStorage[key]) < start - 2000) {
+      if(!id && Number(localStorage[key]) < start - interval*2) {
         emitter.id = id = _id
         localStorage['tabs:'+id] = start //claim this key
       }
@@ -46,7 +56,7 @@ module.exports = function (listener) {
     var now = Date.now()
     
     for(var _id in tabs) {
-      if(Number(tabs[_id]) < now - 2000) {
+      if(Number(tabs[_id]) < now - interval*2) {
         delete tabs[_id]
         //don't delete old ids, so they can be reused,
         //making for smaller vector-clocks.
@@ -80,7 +90,7 @@ module.exports = function (listener) {
   setInterval(function () {
     tabs[id] = localStorage['tabs:'+id] = Date.now()
     count()
-  }, 1000)
+  }, interval)
 
   attach()
 
