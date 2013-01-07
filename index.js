@@ -1,5 +1,5 @@
 var EventEmitter = require('events').EventEmitter
-var hash = require('sha1sum')
+var hash = require('shasum')
 
 var id
 var KEY = 'tabsQuery'

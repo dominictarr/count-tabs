@@ -7,7 +7,7 @@
     "url": "git://github.com/dominictarr/count-tabs.git"
   },
   "dependencies": {
-    "sha1sum": "0.0.1"
+    "shasum": "~0.0"
   },
   "devDependencies": {},
   "scripts": {
