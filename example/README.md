@@ -8,7 +8,7 @@ node server.js
 ## rebuild
 
 ```
-npm run rebuild
+npm run build
 ```
 
 
